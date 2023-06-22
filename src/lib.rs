@@ -1,27 +1,19 @@
-pub use std::default::Default;
-pub use core::ptr::null_mut;
+use std::default::Default;
+use core::ptr::null_mut;
 
-pub use winapi::ctypes::c_int;
-pub use winapi::shared::basetsd::LONG_PTR;
-pub use winapi::shared::minwindef::BOOL;
+use winapi::ctypes::c_int;
+use winapi::shared::minwindef::BOOL;
 
-pub use winapi::um::errhandlingapi::GetLastError;
-pub use winapi::um::libloaderapi::GetModuleHandleW;
+use winapi::um::errhandlingapi::GetLastError;
+use winapi::um::libloaderapi::GetModuleHandleW;
 
-pub use winapi::um::wingdi::{RGB, CreateSolidBrush, GetRValue, GetBValue, GetGValue};
-pub use winapi::um::winuser::{
+use winapi::um::winuser::{
     WNDCLASSW,
     WNDPROC,
-    PAINTSTRUCT,
-    CREATESTRUCTW,
     MSG,
     IDC_ARROW,
-    GWLP_USERDATA,
     SMTO_NORMAL,
 
-    WM_CREATE,
-    WM_NCCREATE,
-    WM_PAINT,
     PM_REMOVE,
     WS_POPUP,
     WS_VISIBLE,
@@ -29,66 +21,38 @@ pub use winapi::um::winuser::{
     SM_CYSCREEN,
     SWP_NOZORDER,
     SWP_NOOWNERZORDER,
-
-    COLOR_HIGHLIGHT, GCLP_HBRBACKGROUND, SetClassLongPtrA,
 };
 
-pub use winapi::um::winuser::{
-    DefWindowProcW,
+use winapi::um::winuser::{
     RegisterClassW,
     CreateWindowExW,
     ShowWindow,
     EnumWindows,
-    DestroyWindow,
-    PostQuitMessage,
     FindWindowW,
     FindWindowExW,
-    GetWindowLongPtrW,
-    SetWindowLongPtrW,
     SendMessageTimeoutW,
 
     GetSystemMetrics,
     SetWindowPos,
     SetParent,
-    GetDesktopWindow,
-    GetDpiForWindow,
 
     LoadCursorW,
 };
 
-pub use winapi::um::winuser::{
-    GetMessageW,
+use winapi::um::winuser::{
     PeekMessageW,
     TranslateMessage,
     DispatchMessageW,
     SystemParametersInfoW,
 };
 
-pub use winapi::um::winuser::{
-    BeginPaint,
-    FillRect,
-    EndPaint,
-};
-
-pub use winapi::shared::windef::{
-    HWND,
-    HBRUSH,
-};
-
-pub use winapi::shared::minwindef::{
-    UINT,
+use winapi::shared::minwindef::{
     HINSTANCE,
-    WPARAM,
     LPARAM,
-    LRESULT,
 };
 
-pub use winapi::um::winuser::{
-    SW_SHOW,
-
-    WM_CLOSE,
-    WM_DESTROY,
-};
+use winapi::um::winuser::SW_SHOW;
+use winapi::shared::windef::HWND;
 
 pub const SHELLDLL_DEF_VIEW_STR : &str = "SHELLDLL_DefView";
 pub const WORKER_W_STR : &str = "WorkerW";
