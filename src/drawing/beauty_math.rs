@@ -20,7 +20,7 @@ pub struct Galaxy {
     pub theta_step: f64,
     pub is_max_radius: bool,
     pub hptr_x: f64, // hypotrochoid x anchor (see: http://en.wikipedia.org/wiki/Hypotrochoid)
-    pub hptr_y: f64, // hypotrochoid y anchor
+    pub hptr_y: f64, // hypotrochoid y anchor (see: http://en.wikipedia.org/wiki/Hypotrochoid)
 }
 
 impl Galaxy {
@@ -57,7 +57,7 @@ impl Galaxy {
     }
 }
 
-/// Not support multithread now
+/// Not support multithread now. (Used static fields)
 pub fn draw_galaxy_step_inc(hdc: HDC, galaxy: &mut Galaxy) {
     let mut prev_x = 0.0;
     let mut prev_y = 0.0;
@@ -103,51 +103,6 @@ pub fn draw_galaxy_step_inc(hdc: HDC, galaxy: &mut Galaxy) {
         ORIG_Y = galaxy.y;
     };
 }
-
-/// Not support multithread now
-//pub fn draw_galaxy_step(hdc: HDC, galaxy: &mut Galaxy) {
-//    let mut prev_x = 0.0;
-//    let mut prev_y = 0.0;
-//    for curv_step in (0..galaxy.curvature).rev() {
-//        if galaxy.diameter > galaxy.max_diameter || galaxy.is_max_radius {
-//            if !galaxy.is_max_radius {
-//                galaxy.is_max_radius = true;
-//            }
-//            if galaxy.diameter < 0.1 {
-//                galaxy.is_max_radius = false;
-//            }
-//            galaxy.theta -= galaxy.theta_step;
-//            galaxy.diameter -= 0.1;
-//        }
-//
-//        if !galaxy.is_max_radius {
-//            galaxy.theta += galaxy.theta_step;
-//            galaxy.diameter += 0.1;
-//        }
-//
-//        let hx = galaxy.hptr_x;
-//        let hy = galaxy.hptr_y;
-//        let q = (hx / hy - 1.0) * galaxy.theta; // create hypotrochoid
-//
-//        unsafe{
-//            let curvature = curv_step as f64 / galaxy.curvature as f64;
-//            let h_delta = hx - hy;
-//            let cur_x = h_delta * galaxy.theta.cos() + galaxy.diameter * q.cos() + (ORIG_X + (galaxy.x - ORIG_X) * curvature) - h_delta;
-//            let cur_y = h_delta * galaxy.theta.sin() - galaxy.diameter * q.sin() + (ORIG_Y + (galaxy.y - ORIG_Y) * curvature);
-//
-//            if prev_x != 0.0 {
-//                draw_line(hdc, (prev_x as i32, prev_y as i32), (cur_x as i32, cur_y as i32), galaxy.color);
-//            }
-//
-//            prev_x = cur_x;
-//            prev_y = cur_y;
-//        }
-//    }
-//    unsafe {
-//        ORIG_X = galaxy.x;
-//        ORIG_Y = galaxy.y;
-//    };
-//}
 
 //---------------------------------------------------------------------------------------------------------------------------
 
