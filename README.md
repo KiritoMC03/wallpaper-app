@@ -1,0 +1,1 @@
+Example of how to use the library: https://github.com/KiritoMC03/live-wallpapers

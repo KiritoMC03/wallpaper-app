@@ -5,6 +5,7 @@ edition = "2021"
 description = "This library provides the functionality to create your own application, displayed as a desktop wallpaper"
 license = "Apache-2.0"
 license-file = "LICENSE"
+readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
