@@ -55,7 +55,7 @@ use winapi::shared::minwindef::{
 use winapi::um::winuser::SW_SHOW;
 use winapi::shared::windef::HWND;
 
-/// Used in FindWindowExW(). Is the name of the window class that is the parent of the desktop window:
+/// Used in [`FindWindowExW()`]. Is the name of the window class that is the parent of the desktop window:
 ///
 /// --- Window ... SHELLDLL_DefView
 ///
@@ -67,7 +67,7 @@ use winapi::shared::windef::HWND;
 /// <https://www.codeproject.com/Articles/856020/Draw-Behind-Desktop-Icons-in-Windows-plus>
 pub const SHELLDLL_DEF_VIEW_STR : &str = "SHELLDLL_DefView";
 
-/// Used in FindWindowExW(). Any application that needs to listen to window messages call this Api to create a worker window.
+/// Used in [`FindWindowExW()`]. Any application that needs to listen to window messages call this Api to create a worker window.
 /// Is the name of the window class we are looking for to put our window into as a child:
 ///
 /// --- Window ... SHELLDLL_DefView
@@ -94,6 +94,17 @@ static mut WORKER_W : Mutex::<HWND> = Mutex::new(null_mut());
 /// WNDCLASSW - <https://learn.microsoft.com/en-us/windows/win32/api/winuser/ns-winuser-wndclassw>
 ///
 /// WNDPROC - <https://learn.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-wndproc>
+///
+/// Example:
+/// ```
+/// fn main() {
+///     let class_name = wide_null("My app window Class");
+///     let window_name = wide_null("My app window");
+///     let (window_class, h_instance) = create_window_class(&class_name, window_procedure);
+///     let window_handle = create_window_handle(&window_class, &class_name, &window_name, h_instance);
+///     create_window(window_handle);
+/// }
+/// ```
 ///
 /// Procedure example:
 /// ```
@@ -139,6 +150,17 @@ pub fn create_window_class(name: &Vec<u16>, window_procedure: WNDPROC) -> (WNDCL
 /// Create window handle for window class (WNDCLASSW) with <i>window_name</i>
 ///
 /// <i>wc</i> and <i>h_instance</i> - can be results o the [`create_window_class()`] func
+///
+/// Example:
+/// ```
+/// fn main() {
+///     let class_name = wide_null("My app window Class");
+///     let window_name = wide_null("My app window");
+///     let (window_class, h_instance) = create_window_class(&class_name, window_procedure);
+///     let window_handle = create_window_handle(&window_class, &class_name, &window_name, h_instance);
+///     create_window(window_handle);
+/// }
+/// ```
 pub fn create_window_handle(wc: &WNDCLASSW, wc_name: &Vec<u16>, window_name: &Vec<u16>, h_instance: HINSTANCE, ) -> HWND {
     let atom = unsafe { RegisterClassW(wc) };
     if atom == 0 {
@@ -173,11 +195,32 @@ pub fn create_window_handle(wc: &WNDCLASSW, wc_name: &Vec<u16>, window_name: &Ve
 /// Create window using window <i>handle</i>.
 ///
 /// <i>handle</i> - can be result of [`create_window_handle()`] func
+///
+/// Example:
+/// ```
+/// fn main() {
+///     let class_name = wide_null("My app window Class");
+///     let window_name = wide_null("My app window");
+///     let (window_class, h_instance) = create_window_class(&class_name, window_procedure);
+///     let window_handle = create_window_handle(&window_class, &class_name, &window_name, h_instance);
+///     create_window(window_handle);
+/// }
+/// ```
 pub fn create_window(handle: HWND) {
     let _previously_visible = unsafe { ShowWindow(handle, SW_SHOW) };
 }
 
 /// Find `Progman` and get handle. Progman requires for [`try_spawn_worker_w()`] func
+///
+/// Example:
+/// ```
+/// fn main() {
+///     let progman_h = get_progman_handle();
+///     if try_spawn_worker_w(progman_h).is_err() {
+///         panic!("`Progman` failed to spawn WorkerW!");
+///     };
+/// }
+/// ```
 pub fn get_progman_handle() -> HWND {
     let h_progman = unsafe { FindWindowW(wide_null("Progman").as_ptr(), null_mut()) };
     h_progman
@@ -188,6 +231,16 @@ pub fn get_progman_handle() -> HWND {
 /// Send 0x052C to Progman. This message directs Progman to spawn a
 /// WorkerW behind the desktop icons. If it is already there, nothing
 /// happens.
+///
+/// Example:
+/// ```
+/// fn main() {
+///     let progman_h = get_progman_handle();
+///     if try_spawn_worker_w(progman_h).is_err() {
+///         panic!("`Progman` failed to spawn WorkerW!");
+///     };
+/// }
+/// ```
 pub fn try_spawn_worker_w(progman_handle: HWND) -> Result<(), &'static str> {
     // Requare all for support all windows versions!
     let send_message_results = unsafe { [
@@ -204,6 +257,18 @@ pub fn try_spawn_worker_w(progman_handle: HWND) -> Result<(), &'static str> {
 }
 
 /// Find the newly created `WorkerW`
+/// Example:
+/// ```
+/// fn main() {
+///     let class_name = wide_null("My app window Class");
+///     let window_name = wide_null("My app window");
+///     let (window_class, h_instance) = create_window_class(&class_name, window_procedure);
+///     let window_handle = create_window_handle(&window_class, &class_name, &window_name, h_instance);let worker_w_handle = find_worker_w();
+///     pull_window_to_desktop(window_handle, worker_w_handle);
+///     let worker_w_handle = find_worker_w();
+///     pull_window_to_desktop(window_handle, worker_w_handle);
+/// }
+/// ```
 pub fn find_worker_w() -> HWND {
     unsafe {
         EnumWindows(Some(enum_windows_proc), 0);
@@ -218,6 +283,17 @@ pub fn find_worker_w() -> HWND {
 /// <b>SWP_NOOWNERZORDER</b> - Does not change the owner window's position in the Z order.
 ///
 /// <b>SWP_NOZORDER</b> - Retains the current Z order (ignores the hWndInsertAfter parameter).
+///
+/// Example:
+/// ```
+/// fn main() {
+///     let class_name = wide_null("My app window Class");
+///     let window_name = wide_null("My app window");
+///     let (window_class, h_instance) = create_window_class(&class_name, window_procedure);
+///     let window_handle = create_window_handle(&window_class, &class_name, &window_name, h_instance);let worker_w_handle = find_worker_w();
+///     pull_window_to_desktop(window_handle, worker_w_handle);
+/// }
+/// ```
 pub fn pull_window_to_desktop(handle: HWND, worker_w_handle: HWND) {
     unsafe { SetParent(handle, worker_w_handle) };
     unsafe {
@@ -299,6 +375,15 @@ pub fn handle_window_messages(mut msg: MSG) -> bool {
 ///
 /// Read more about WNDPROC - <https://learn.microsoft.com/en-us/windows/win32/api/winuser/nc-winuser-wndproc>
 ///
+/// Usage example:
+///  ```
+/// fn main() {
+///     unsafe { SetProcessDPIAware(); }
+///     let window_handle = create_desktop_window_fast("My app window", Some(window_procedure));
+///     loop_graphics(window_handle);
+/// }
+///  ```
+///
 /// Procedure example:
 /// ```
 /// pub unsafe extern "system" fn window_procedure(hwnd: HWND, msg: UINT, w_param: WPARAM, l_param: LPARAM,) -> LRESULT {
@@ -352,6 +437,14 @@ pub fn create_desktop_window_fast(name: &str, window_procedure: WNDPROC) -> HWND
 /// !!! With this strings use W-functions !!!
 ///
 /// For example: [`winapi::um::libloaderapi::GetModuleHandleW()`] or [`winapi::um::winuser::RegisterClassW`]
+///
+/// Usage example:
+/// ```
+/// fn main() {
+///     let class_name = wide_null("My app window Class");
+///     let (window_class, h_instance) = create_window_class(&class_name, window_procedure);
+/// }
+/// ```
 pub fn wide_null(s: &str) -> Vec<u16> {
     s.encode_utf16().chain(Some(0)).collect()
 }
