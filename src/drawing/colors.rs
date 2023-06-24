@@ -47,6 +47,24 @@ pub fn interpolate_colors(colors: &[RGB<u8>], weight: f32) -> u32 {
     winapi::um::wingdi::RGB(r, g, b)
 }
 
+pub fn mix_colors(colors: &[RGB<u8>], proportions: &[f32]) -> RGB<u8> {
+    let total_prop = proportions.iter().sum::<f32>();
+
+    let calculate_component = |component: fn(&RGB<u8>) -> u8| {
+        colors
+            .iter()
+            .map(|v| component(v) as f32)
+            .zip(proportions)
+            .fold(0.0, |acc, (v, p)| acc + v * p) / total_prop
+    };
+
+    let r = calculate_component(|v| v.r);
+    let g = calculate_component(|v| v.g);
+    let b = calculate_component(|v| v.b);
+
+    RGB::new(r as u8, g as u8, b as u8)
+}
+
 pub fn interpolate_floats(floats: &[f32], weight: f32) -> f32 {
     let num_colors = floats.len();
     let segment = 1.0 / (num_colors - 1) as f32;
