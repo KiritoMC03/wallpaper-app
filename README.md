@@ -8,9 +8,11 @@ You can use it to create an application window and place it in the desktop so th
 ## Examples
 An example of using the library in a project: https://github.com/KiritoMC03/live-wallpapers
 
+This library uses `winapi` crate for best control, but you don't have to use only it in your projects, because there are already many wrapper-crates for creating windowed applications!
+
 ```toml
 [dependencies]
-wallpaper-app = "0.1.1"
+wallpaper-app = "0.1.7"
 winapi = { version = "0.3.9", features = ["winuser", "processthreadsapi", "libloaderapi", "errhandlingapi", "impl-default"] }
 ```
 
