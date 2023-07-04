@@ -146,5 +146,5 @@ pub fn draw_spiral(hdc: HDC) {
         winapi::um::wingdi::DeleteObject(brush as _);
     }
 
-    todo!("Add custom parameters!");
+    // ToDo: Add custom parameters!
 }
